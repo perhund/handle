@@ -1,0 +1,37 @@
+[
+    {
+        "name": "m\u00e6lk",
+        "quantity": 3,
+        "category": "M\u00e6lk og \u00c6g"
+    },
+    {
+        "name": "hamburgerryg",
+        "quantity": 1,
+        "category": "P\u00e5l\u00e6g"
+    },
+    {
+        "name": "chips",
+        "quantity": 1,
+        "category": "Snacks"
+    },
+    {
+        "name": "spegep\u00f8lse",
+        "quantity": 1,
+        "category": "P\u00e5l\u00e6g"
+    },
+    {
+        "name": "K\u00f8kkenrulle",
+        "quantity": 1,
+        "category": "Husholdning"
+    },
+    {
+        "name": "Oksek\u00f8d",
+        "quantity": 1,
+        "category": "K\u00f8d"
+    },
+    {
+        "name": "Agurk",
+        "quantity": 1,
+        "category": "Frugt og Gr\u00f8nt"
+    }
+]
