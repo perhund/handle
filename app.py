@@ -45,9 +45,12 @@ def index():
     # Pass the sorted items, the current store, and available stores to the template
     return render_template("index.html", items=sorted_items, store=selected_store, stores=stores.keys())
 
+
+
 @app.route("/add", methods=["POST"])
 def add_item():
-    item_name_quantity = request.form.get("item", "").strip()
+    data = request.get_json()
+    item_name_quantity = data.get("item", "").strip()
     parts = item_name_quantity.rsplit(" ", 1)
     
     # The text before the last space is the item name; 
@@ -56,32 +59,23 @@ def add_item():
     quantity = int(parts[1]) if len(parts) > 1 and parts[1].isdigit() else 1
     
     # Only proceed if there's an actual item name
-    if item_name_quantity:
+    if item_name:
         # Load your main data list (shopping list items)
         data = load_data()
         
-        # Load your item/category mapping from items.json
+        # Find category
         with open("items.json", "r", encoding="utf-8") as f:
             items_map = json.load(f)
-        
-        # Normalize the user’s item name for lookup (e.g., lowercase)
         lookup_name = item_name.lower()
-        
-        # Look up the category in items.json; default to "Uncategorized" if not found
         category = items_map.get(lookup_name, "Uncategorized")
         
         # Add the new item with category to your data
-        data.append({
-            "name": item_name,
-            "quantity": quantity,
-            "category": category
-        })
-        
-        # Save the updated data
+        new_item = {"name": item_name, "quantity": quantity, "category": category}
+        data.append(new_item)
         save_data(data)
     
-    # Redirect back to the index page
-    return redirect(url_for("index"))
+    # Return new item
+    return jsonify(success=True, new_item=new_item)
 
 @app.route("/remove/<item_name>")
 def remove_item(item_name):
@@ -89,6 +83,15 @@ def remove_item(item_name):
     data = [item for item in data if item["name"] != item_name]
     save_data(data)
     return redirect(url_for("index"))
+
+@app.route("/items_partial")
+def items_partial():
+    # Load items and sort them by your criteria.
+    items = load_data()
+    # For example, sort items by category (assuming store-specific ordering logic is applied)
+    # You may have a sort_key function as defined earlier.
+    sorted_items = sorted(items, key=lambda i: (i.get("category", "Uncategorized"), i["name"].lower()))
+    return render_template("_items.html", items=sorted_items)
 
 if __name__ == "__main__":
     app.run(debug=True)
