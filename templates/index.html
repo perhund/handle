@@ -50,13 +50,14 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
   <script>
     async function updateItems() {
-        const response = await fetch('/items_partial');
-        if (response.ok) {
-            const html = await response.text();
-            document.getElementById('items-container').innerHTML = html;
-        } else {
-            console.error('Failed to fetch updated items');
-        }
+      const store = document.getElementById('store').value;
+      const response = await fetch(`/items_partial?store=${encodeURIComponent(store)}`);
+      if (response.ok) {
+          const html = await response.text();
+          document.getElementById('items-container').innerHTML = html;
+      } else {
+          console.error('Failed to fetch updated items');
+      }
     }
     
     document.getElementById('add-item-form').addEventListener('submit', async function(e) {
