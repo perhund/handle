@@ -1,0 +1,22 @@
+[
+    {
+        "name": "m\u00e6lk",
+        "quantity": 3,
+        "category": "M\u00e6lk og \u00c6g"
+    },
+    {
+        "name": "Oksek\u00f8d",
+        "quantity": 1,
+        "category": "K\u00f8d"
+    },
+    {
+        "name": "Agurk",
+        "quantity": 1,
+        "category": "Frugt og Gr\u00f8nt"
+    },
+    {
+        "name": "boller",
+        "quantity": 1,
+        "category": "Br\u00f8d"
+    }
+]

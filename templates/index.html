@@ -35,8 +35,8 @@
     </form>
 
     <!-- Add item form -->
-    <form id="add-item-form" name="add-item-form" action="{{ url_for('add_item') }}" method="POST" class="d-flex justify-content-between mb-4">
-      <input type="text" id="item-input" name="item" class="form-control" placeholder="Enter item" required autofocus>
+    <form id="add-item-form" class="d-flex justify-content-between mb-4">
+      <input type="text" id="item-input" class="form-control" placeholder="Enter item" required autofocus>
       <button type="submit" class="btn btn-primary ms-2">Add</button>
     </form>
 
@@ -79,7 +79,8 @@
             if (data.success) {
                 // Update the items list by re-fetching the partial HTML
                 updateItems();
-                itemInput.value = ''; // Clear the input
+                itemInput.value = '';
+                itemInput.focus();
             } else {
                 console.error('Error adding item:', data.error);
             }
