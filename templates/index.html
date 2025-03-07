@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,16 +11,17 @@
       max-width: 400px;
       margin: 0 auto;
     }
-    /* Custom style for category headers */
+
     .category-header {
-      background-color: #f8f9fa; /* Light background */
-      color: #6c757d; /* Muted text */
+      background-color: #f8f9fa;
+      color: #6c757d;
       border: none;
       font-size: 0.9em;
       padding: 0.5rem 1rem;
     }
   </style>
 </head>
+
 <body>
   <div class="container my-4">
     <h2 class="text-center">Shopping List</h2>
@@ -29,7 +31,7 @@
       <label for="store" class="form-label">Vælg butik:</label>
       <select name="store" id="store" class="form-select" onchange="this.form.submit()">
         {% for s in stores %}
-          <option value="{{ s }}" {% if s == store %}selected{% endif %}>{{ s }}</option>
+        <option value="{{ s }}" {% if s==store %}selected{% endif %}>{{ s }}</option>
         {% endfor %}
       </select>
     </form>
@@ -53,42 +55,43 @@
       const store = document.getElementById('store').value;
       const response = await fetch(`/items_partial?store=${encodeURIComponent(store)}`);
       if (response.ok) {
-          const html = await response.text();
-          document.getElementById('items-container').innerHTML = html;
+        const html = await response.text();
+        document.getElementById('items-container').innerHTML = html;
       } else {
-          console.error('Failed to fetch updated items');
+        console.error('Failed to fetch updated items');
       }
     }
-    
-    document.getElementById('add-item-form').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const itemInput = document.getElementById('item-input');
-        const itemValue = itemInput.value;
-    
-        try {
-            const response = await fetch('/add', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ item: itemValue })
-            });
-    
-            if (!response.ok) {
-                throw new Error('Network response was not OK');
-            }
-    
-            const data = await response.json();
-            if (data.success) {
-                // Update the items list by re-fetching the partial HTML
-                updateItems();
-                itemInput.value = '';
-                itemInput.focus();
-            } else {
-                console.error('Error adding item:', data.error);
-            }
-        } catch (error) {
-            console.error('Error adding item:', error);
+
+    document.getElementById('add-item-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const itemInput = document.getElementById('item-input');
+      const itemValue = itemInput.value;
+
+      try {
+        const response = await fetch('/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ item: itemValue })
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not OK');
         }
+
+        const data = await response.json();
+        if (data.success) {
+          // Update the items list by re-fetching the partial HTML
+          updateItems();
+          itemInput.value = '';
+          itemInput.focus();
+        } else {
+          console.error('Error adding item:', data.error);
+        }
+      } catch (error) {
+        console.error('Error adding item:', error);
+      }
     });
-    </script>
+  </script>
 </body>
+
 </html>
