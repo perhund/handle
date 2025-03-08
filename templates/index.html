@@ -31,9 +31,10 @@
     <h2 class="text-center">Shopping List</h2>
 
     <!-- Store selection form -->
-    <form method="GET" action="{{ url_for('index') }}" class="mb-3">
+    <form method="GET" hx-get="{{ url_for('items_partial') }}" hx-target="#items-container" hx-swap="innerHTML"
+      hx-trigger="change from:#store">
       <label for="store" class="form-label">Vælg butik:</label>
-      <select name="store" id="store" class="form-select" onchange="this.form.submit()">
+      <select name="store" id="store" class="form-select">
         {% for s in stores %}
         <option value="{{ s }}" {% if s==store %}selected{% endif %}>{{ s }}</option>
         {% endfor %}
@@ -47,7 +48,6 @@
       <input type="text" name="item" id="item-input" class="form-control" placeholder="Enter item" required autofocus>
       <button type="submit" class="btn btn-primary ms-2">Add</button>
     </form>
-
 
     <!-- List of items grouped by category -->
     <div id="items-container">
