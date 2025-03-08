@@ -50,11 +50,12 @@ def index():
 
 @app.route("/add", methods=["POST"])
 def add_item():
-    data = request.get_json()
-    item_name_quantity = data.get("item", "").strip()
+    # Get the form-encoded data sent by htmx
+    item_name_quantity = request.form.get("item", "").strip()
+    selected_store = request.form.get("store", "rema1000")
     parts = item_name_quantity.rsplit(" ", 1)
 
-    # If last word is a number use it as quantity
+    # If the last word is a number, treat it as quantity.
     if len(parts) > 1 and parts[1].isdigit():
         item_name = parts[0]
         quantity = parts[1]
@@ -64,19 +65,20 @@ def add_item():
 
     if item_name:
         shopping_list = load_data(SHOPPING_LIST_FILE)
-
-        # Find category
         lookup_name = item_name.lower()
         item_categories = load_data(ITEM_CATEGORIES_FILE)
         category = item_categories.get(lookup_name, "Uncategorized")
-
-        # Add the new item with category to your data
         new_item = {"name": item_name, "quantity": quantity, "category": category}
         shopping_list.append(new_item)
         save_data(shopping_list, SHOPPING_LIST_FILE)
 
-    # Return new item
-    return jsonify(success=True, new_item=new_item)
+    # Get the sorted items list for the currently selected store
+    category_orders = load_data(CATEGORY_ORDERS_FILE)
+    category_order = category_orders.get(selected_store, [])
+    sorted_items = get_sorted_shopping_list(category_order)
+
+    # Return the updated items partial (HTML fragment)
+    return render_template("_items.html", items=sorted_items)
 
 
 @app.route("/remove/<removed_item>")
