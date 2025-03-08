@@ -34,7 +34,8 @@
     <form method="GET" hx-get="{{ url_for('items_partial') }}" hx-target="#items-container" hx-swap="innerHTML"
       hx-trigger="change from:#store">
       <label for="store" class="form-label">Vælg butik:</label>
-      <select name="store" id="store" class="form-select">
+      <select name="store" id="store" class="form-select"
+        hx-on:change="document.getElementById('store-hidden').value = this.value">
         {% for s in stores %}
         <option value="{{ s }}" {% if s==store %}selected{% endif %}>{{ s }}</option>
         {% endfor %}
@@ -42,9 +43,9 @@
     </form>
 
     <!-- Add item form with htmx -->
-    <form id="add-item-form" class="d-flex justify-content-between mb-4"
-      hx-post="{{ url_for('add_item', store=store) }}" hx-target="#items-container" hx-swap="innerHTML"
-      hx-on--after-request="this.reset()">
+    <form id="add-item-form" class="d-flex justify-content-between mb-4" hx-post="{{ url_for('add_item') }}"
+      hx-target="#items-container" hx-swap="innerHTML" hx-on--after-request="this.reset()">
+      <input type="hidden" name="store" id="store-hidden" value="{{ store }}">
       <input type="text" name="item" id="item-input" class="form-control" placeholder="Enter item" required autofocus>
       <button type="submit" class="btn btn-primary ms-2">Add</button>
     </form>
