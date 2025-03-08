@@ -83,10 +83,18 @@ def add_item():
 
 @app.route("/remove/<removed_item>")
 def remove_item(removed_item):
+    # Update shopping list
     shopping_list = load_data(SHOPPING_LIST_FILE)
     shopping_list = [item for item in shopping_list if item["name"] != removed_item]
     save_data(shopping_list, SHOPPING_LIST_FILE)
-    return redirect(url_for("index"))
+
+    # Sort shopping list
+    selected_store = request.args.get("store", "rema1000")
+    category_orders = load_data(CATEGORY_ORDERS_FILE)
+    category_order = category_orders.get(selected_store, [])
+    sorted_items = get_sorted_shopping_list(category_order)
+
+    return render_template("_items.html", items=sorted_items)
 
 
 @app.route("/items_partial")
