@@ -5,9 +5,9 @@
   {% endif %}
   <li class="list-group-item d-flex justify-content-between align-items-center">
     <span>{{ item.quantity }}x {{ item.name }}</span>
-    <a href="{{ url_for('remove_item', removed_item=item.name, store=store) }}"
-      hx-get="{{ url_for('remove_item', removed_item=item.name, store=store) }}" hx-target="#items-container"
-      hx-swap="innerHTML" class="btn btn-danger btn-sm">
+    <a href="{{ url_for('remove_item', removed_item=item.name) }}"
+      hx-get="{{ url_for('remove_item', removed_item=item.name) }}" hx-target="#items-container"
+      hx-swap="innerHTML" hx-include="#store" class="btn btn-danger btn-sm">
       Remove
     </a>
   </li>

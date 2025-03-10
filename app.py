@@ -78,7 +78,7 @@ def add_item():
     sorted_items = get_sorted_shopping_list(category_order)
 
     # Return the updated items partial (HTML fragment)
-    return render_template("_items.html", items=sorted_items, store=selected_store)
+    return render_template("_items.html", items=sorted_items)
 
 
 @app.route("/remove/<removed_item>")
@@ -94,7 +94,7 @@ def remove_item(removed_item):
     category_order = category_orders.get(selected_store, [])
     sorted_items = get_sorted_shopping_list(category_order)
 
-    return render_template("_items.html", items=sorted_items, store=selected_store)
+    return render_template("_items.html", items=sorted_items)
 
 
 @app.route("/items_partial")
@@ -104,7 +104,7 @@ def items_partial():
     category_order = category_orders.get(selected_store, [])
     sorted_items = get_sorted_shopping_list(category_order)
 
-    return render_template("_items.html", items=sorted_items, store=selected_store)
+    return render_template("_items.html", items=sorted_items)
 
 
 if __name__ == "__main__":
