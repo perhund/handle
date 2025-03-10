@@ -58,7 +58,7 @@ def add_item():
     # If the last word is a number, treat it as quantity.
     if len(parts) > 1 and parts[1].isdigit():
         item_name = parts[0]
-        quantity = parts[1]
+        quantity = int(parts[1])
     else:
         item_name = item_name_quantity
         quantity = 1

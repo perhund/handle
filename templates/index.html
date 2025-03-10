@@ -14,6 +14,7 @@
     .container {
       max-width: 400px;
       margin: 0 auto;
+      position: relative;
     }
 
     .category-header {
@@ -23,17 +24,57 @@
       font-size: 0.9em;
       padding: 0.5rem 1rem;
     }
+
+    .floating-btn-container {
+      position: sticky;
+      bottom: 25px;
+      right: 100px;
+      display: flex;
+      justify-content: flex-end;
+      padding-right: 25px;
+      /* Pushes button to the right */
+    }
+
+    .floating-btn {
+      width: 60px;
+      height: 60px;
+      background-color: #0C9;
+      color: #FFF;
+      border-radius: 60px;
+      text-align: center;
+    }
+
+    .checkbox-btn {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #28a745;
+      /* Green checkbox border */
+      background-color: white;
+      color: #28a745;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      line-height: 18px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+      /* Space between checkbox and text */
+    }
+
+    .checkbox-btn:hover {
+      background-color: #28a745;
+      color: white;
+    }
   </style>
 </head>
 
 <body>
   <div class="container my-4">
-    <h2 class="text-center">Shopping List</h2>
+    <h2 class="text-center">Handle</h2>
 
     <!-- Store selection form -->
     <form hx-get="{{ url_for('items_partial') }}" hx-target="#items-container" hx-swap="innerHTML"
       hx-trigger="change from:#store">
-      <label for="store" class="form-label">Vælg butik:</label>
       <select name="store" id="store" class="form-select">
         {% for s in stores %}
         <option value="{{ s }}" {% if s==store %}selected{% endif %}>{{ s }}</option>
@@ -42,16 +83,24 @@
     </form>
 
     <!-- Add item form with htmx -->
-    <form id="add-item-form" class="d-flex justify-content-between mb-4" hx-post="{{ url_for('add_item') }}"
+    <form id="add-item-form" class="sticky-top d-flex justify-content-between mb-4" hx-post="{{ url_for('add_item') }}"
       hx-target="#items-container" hx-swap="innerHTML" hx-on--after-request="this.reset()" hx-include="#store">
-      <input type="text" name="item" id="item-input" class="form-control" placeholder="Enter item" required autofocus>
-      <button type="submit" class="btn btn-primary ms-2">Add</button>
+      <input type="text" name="item" id="item-input" class="form-control" placeholder="Tilføj en vare" required>
     </form>
 
     <!-- List of items grouped by category -->
-    <div id="items-container" hx-on::after-settle="document.getElementById('item-input').focus()">
+    <div id="items-container">
       {% include '_items.html' %}
     </div>
+
+
+    <div class="floating-btn-container">
+      <button class="floating-btn"  onclick="document.getElementById('item-input').focus();">
+      +</button>
+    </div>
+
+
+
   </div>
 
 </body>

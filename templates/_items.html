@@ -3,13 +3,19 @@
   {% if loop.first or item.category != items[loop.index0 - 1].category %}
   <li class="list-group-item category-header">{{ item.category }}</li>
   {% endif %}
-  <li class="list-group-item d-flex justify-content-between align-items-center">
-    <span>{{ item.quantity }}x {{ item.name }}</span>
-    <a href="{{ url_for('remove_item', removed_item=item.name) }}"
-      hx-get="{{ url_for('remove_item', removed_item=item.name) }}" hx-target="#items-container"
-      hx-swap="innerHTML" hx-include="#store" class="btn btn-danger btn-sm">
-      Remove
-    </a>
+  <li class="list-group-item d-flex align-items-center">
+    <div class="col-auto me-1">
+      <button class="checkbox-btn" hx-get="{{ url_for('remove_item', removed_item=item.name) }}"
+        hx-target="#items-container" hx-swap="innerHTML" hx-include="#store"></button>
+    </div>
+    <div class="col-1 me-1">
+      {% if item.quantity > 1 %}
+      {{ item.quantity }}
+      {% endif %}
+    </div>
+    <div class="col">
+      {{ item.name }}
+    </div>
   </li>
   {% endfor %}
 </ul>
