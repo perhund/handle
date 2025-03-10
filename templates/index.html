@@ -31,7 +31,7 @@
     <h2 class="text-center">Shopping List</h2>
 
     <!-- Store selection form -->
-    <form method="GET" hx-get="{{ url_for('items_partial') }}" hx-target="#items-container" hx-swap="innerHTML"
+    <form hx-get="{{ url_for('items_partial') }}" hx-target="#items-container" hx-swap="innerHTML"
       hx-trigger="change from:#store">
       <label for="store" class="form-label">Vælg butik:</label>
       <select name="store" id="store" class="form-select">
@@ -42,9 +42,8 @@
     </form>
 
     <!-- Add item form with htmx -->
-    <form id="add-item-form" class="d-flex justify-content-between mb-4"
-      hx-post="{{ url_for('add_item', store=store) }}" hx-target="#items-container" hx-swap="innerHTML"
-      hx-on--after-request="this.reset()">
+    <form id="add-item-form" class="d-flex justify-content-between mb-4" hx-post="{{ url_for('add_item') }}"
+      hx-target="#items-container" hx-swap="innerHTML" hx-on--after-request="this.reset()" hx-include="#store">
       <input type="text" name="item" id="item-input" class="form-control" placeholder="Enter item" required autofocus>
       <button type="submit" class="btn btn-primary ms-2">Add</button>
     </form>

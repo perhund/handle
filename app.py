@@ -52,7 +52,7 @@ def index():
 def add_item():
     # Get the form-encoded data sent by htmx
     item_name_quantity = request.form.get("item", "").strip()
-    selected_store = request.args.get("store", "rema1000")
+    selected_store = request.form.get("store", "rema1000")
     parts = item_name_quantity.rsplit(" ", 1)
 
     # If the last word is a number, treat it as quantity.
