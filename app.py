@@ -37,22 +37,19 @@ def get_sorted_shopping_list(category_order):
 
 @app.route("/")
 def index():
-    selected_store = request.args.get("store", "rema1000")
+    selected_store = request.args.get("store", "Rema 1000")
     category_orders = load_data(CATEGORY_ORDERS_FILE)
     stores = category_orders.keys()
     category_order = category_orders.get(selected_store, [])
     sorted_items = get_sorted_shopping_list(category_order)
 
-    return render_template(
-        "index.html", items=sorted_items, store=selected_store, stores=stores
-    )
+    return render_template("index.html", items=sorted_items, store=selected_store, stores=stores)
 
 
 @app.route("/add", methods=["POST"])
 def add_item():
     # Get the form-encoded data sent by htmx
     item_name_quantity = request.form.get("item", "").strip()
-    selected_store = request.form.get("store", "rema1000")
     parts = item_name_quantity.rsplit(" ", 1)
 
     # If the last word is a number, treat it as quantity.
@@ -72,13 +69,7 @@ def add_item():
         shopping_list.append(new_item)
         save_data(shopping_list, SHOPPING_LIST_FILE)
 
-    # Get the sorted items list for the currently selected store
-    category_orders = load_data(CATEGORY_ORDERS_FILE)
-    category_order = category_orders.get(selected_store, [])
-    sorted_items = get_sorted_shopping_list(category_order)
-
-    # Return the updated items partial (HTML fragment)
-    return render_template("_items.html", items=sorted_items)
+    return redirect(url_for("items_partial"))
 
 
 @app.route("/remove/<removed_item>")
@@ -88,18 +79,12 @@ def remove_item(removed_item):
     shopping_list = [item for item in shopping_list if item["name"] != removed_item]
     save_data(shopping_list, SHOPPING_LIST_FILE)
 
-    # Sort shopping list
-    selected_store = request.args.get("store", "rema1000")
-    category_orders = load_data(CATEGORY_ORDERS_FILE)
-    category_order = category_orders.get(selected_store, [])
-    sorted_items = get_sorted_shopping_list(category_order)
-
-    return render_template("_items.html", items=sorted_items)
+    return redirect(url_for("items_partial"))
 
 
 @app.route("/items_partial")
 def items_partial():
-    selected_store = request.args.get("store", "rema1000")
+    selected_store = request.args.get("store", "Rema 1000")
     category_orders = load_data(CATEGORY_ORDERS_FILE)
     category_order = category_orders.get(selected_store, [])
     sorted_items = get_sorted_shopping_list(category_order)
