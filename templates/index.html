@@ -39,7 +39,7 @@
       hx-trigger="change from:#store">
       <select name="store" id="store" class="form-select mb-1">
         {% for s in stores %}
-        <option value="{{ s }}" {% if s==store %}selected{% endif %}>{{ s }}</option>
+        <option value="{{ s.name }}" {% if s.name==store %}selected{% endif %}>{{ s.name }}</option>
         {% endfor %}
       </select>
     </form>
