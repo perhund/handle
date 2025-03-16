@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <!-- meta, manifest -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <!-- HTMX, Bootstrap -->
+  <script src="https://unpkg.com/htmx.org@2.0.4"
+    integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+"
+    crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Custom style -->
+  <style>
+    .category-header {
+      background-color: #f8f9fa;
+      color: #6c757d;
+
+    }
+
+    .mobile-button {
+      width: 60px;
+      height: 60px;
+      bottom: 10px;
+      right: 10px;
+      user-select: none;
+    }
+  </style>
+
+  <title>Handle</title>
+
+</head>
+
+<body>
+
+  {% block content %}{% endblock %}
+
+</body>
+
+</html>
