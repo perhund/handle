@@ -60,7 +60,7 @@ def add_item():
         db.session.add(new_item)
         db.session.commit()
 
-    return redirect(url_for("items_partial"))
+    return redirect(url_for("items_partial", store=request.form.get("store")))
 
 
 @app.route("/remove/<string:removed_item>")
@@ -69,11 +69,13 @@ def remove_item(removed_item):
     if item:
         db.session.delete(item)
         db.session.commit()
-    return redirect(url_for("items_partial"))
+    return redirect(url_for("items_partial", store=request.args.get("store")))
 
 
 @app.route("/items_partial")
 def items_partial():
+    if not request.headers.get("HX-Request"):
+        return redirect(url_for("index"))
     selected_store = request.args.get("store", "Rema 1000")
     sorted_items = get_sorted_shopping_list(selected_store)
     return render_template("_items.html", items=sorted_items)
