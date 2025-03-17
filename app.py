@@ -15,7 +15,7 @@ db.init_app(app)
 def get_sorted_shopping_list(selected_store):
     store = Store.query.filter_by(name=selected_store).first()
     if store:
-        order_map = {assoc.category.name: assoc.order_index for assoc in store.store_categories}
+        order_map = {assoc.category.name: assoc.order_index for assoc in store.store_category_association}
     else:
         order_map = {}
 
