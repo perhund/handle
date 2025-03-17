@@ -39,8 +39,8 @@ class StoreCategory(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey("category.id"), nullable=False)
     order_index = db.Column(db.Integer, nullable=False)
 
-    store = db.relationship("Store", backref="store_categories")
-    category = db.relationship("Category")
+    store = db.relationship("Store", backref="store_category_association")
+    category = db.relationship("Category", backref="store_category_association")
 
     def __repr__(self):
         return f"<StoreCategory store_id={self.store_id} category_id={self.category_id} order={self.order_index}>"

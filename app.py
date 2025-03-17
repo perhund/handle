@@ -81,5 +81,19 @@ def items_partial():
     return render_template("_items.html", items=sorted_items)
 
 
+@app.route("/category_order")
+def category_order():
+    selected_store_name = request.args.get("store", "Rema 1000")
+    stores = Store.query.all()
+    selected_store = Store.query.filter_by(name=selected_store_name).first()
+
+    return render_template(
+        "category_order.html",
+        stores=stores,
+        selected_store=selected_store,
+        associations=selected_store.store_category_association,
+    )
+
+
 if __name__ == "__main__":
     app.run(debug=True)
