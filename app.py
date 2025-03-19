@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from models import db, ShoppingListItem, Category, Store, StoreCategory, ItemDefaultCategory
+from sqlalchemy import select, case, func
 import os
 
 app = Flask(__name__)
@@ -12,29 +13,33 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 
-def get_sorted_shopping_list(selected_store):
-    store = Store.query.filter_by(name=selected_store).first()
-    if store:
-        order_map = {assoc.category.name: assoc.order_index for assoc in store.store_category_association}
-    else:
-        order_map = {}
-
-    items = ShoppingListItem.query.all()
-
-    def sort_key(item):
-        order = order_map.get(item.category, float("inf"))
-        return (order, item.name.lower())
-
-    return sorted(items, key=sort_key)
+def get_sorted_shopping_list(selected_store_id):
+    stmt = (
+        select(ShoppingListItem)
+        .outerjoin(
+            StoreCategory,
+            (ShoppingListItem.category_id == StoreCategory.category_id)
+            & (StoreCategory.store_id == selected_store_id),
+        )
+        .order_by(
+            case((StoreCategory.order_index.is_(None), 1), else_=0),
+            StoreCategory.order_index,
+            StoreCategory.category_id,
+            func.lower(ShoppingListItem.name),
+        )
+    )
+    result = db.session.scalars(stmt).all()
+    return result
 
 
 @app.route("/")
 def index():
-    selected_store = request.args.get("store", "Rema 1000")
-    sorted_items = get_sorted_shopping_list(selected_store)
-    stores = Store.query.all()
+    selected_store = request.args.get("store", 1)
+    print(selected_store)
+    items = get_sorted_shopping_list(selected_store)
+    stores = db.session.scalars(select(Store)).all()
 
-    return render_template("index.html", items=sorted_items, store=selected_store, stores=stores)
+    return render_template("index.html", items=items, selected_store=selected_store, stores=stores)
 
 
 @app.route("/add", methods=["POST"])
@@ -52,11 +57,11 @@ def add_item():
     if item_name:
         default_mapping = ItemDefaultCategory.query.filter_by(item_name=item_name.lower()).first()
         if default_mapping:
-            category = default_mapping.default_category.name
+            category_id = default_mapping.default_category.id
         else:
-            category = "Uncategorized"
+            category_id = None
 
-        new_item = ShoppingListItem(name=item_name, quantity=quantity, category=category)
+        new_item = ShoppingListItem(name=item_name, quantity=quantity, category_id=category_id)
         db.session.add(new_item)
         db.session.commit()
 
@@ -76,9 +81,9 @@ def remove_item(removed_item):
 def items_partial():
     if not request.headers.get("HX-Request"):
         return redirect(url_for("index"))
-    selected_store = request.args.get("store", "Rema 1000")
-    sorted_items = get_sorted_shopping_list(selected_store)
-    return render_template("_items.html", items=sorted_items)
+    selected_store = request.args.get("store", 1)
+    items = get_sorted_shopping_list(selected_store)
+    return render_template("_items.html", items=items)
 
 
 @app.route("/category_order")

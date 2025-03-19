@@ -8,7 +8,9 @@ class ShoppingListItem(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     quantity = db.Column(db.Integer, default=1)
-    category = db.Column(db.String(100), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey("category.id"))
+
+    category = db.relationship("Category", backref="shopping_list_item")
 
     def __repr__(self):
         return f"<ShoppingListItem {self.name} ({self.quantity}) in {self.category}>"
@@ -51,7 +53,8 @@ class ItemDefaultCategory(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     item_name = db.Column(db.String(100), unique=True, nullable=False)
     default_category_id = db.Column(db.Integer, db.ForeignKey("category.id"), nullable=False)
-    default_category = db.relationship("Category", backref="default_mappings")
+
+    default_category = db.relationship("Category", backref="default_item")
 
     def __repr__(self):
         return f"<ItemDefaultCategory {self.item_name} => {self.default_category.name}>"

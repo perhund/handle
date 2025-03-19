@@ -8,8 +8,8 @@
   <form hx-get="{{ url_for('items_partial') }}" hx-target="#items-container" hx-swap="innerHTML"
     hx-trigger="change from:#store" autocomplete="off">
     <select name="store" id="store" class="form-select mb-1">
-      {% for s in stores %}
-      <option value="{{ s.name }}" {% if s.name==store %}selected{% endif %}>{{ s.name }}</option>
+      {% for store in stores %}
+      <option value="{{ store.id }}">{{ store.name }}</option>
       {% endfor %}
     </select>
   </form>
