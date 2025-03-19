@@ -34,12 +34,12 @@ def get_sorted_shopping_list(selected_store_id):
 
 @app.route("/")
 def index():
-    selected_store = request.args.get("store", 1)
+    selected_store = int(request.args.get("store", 1))
     print(selected_store)
     items = get_sorted_shopping_list(selected_store)
     stores = db.session.scalars(select(Store)).all()
 
-    return render_template("index.html", items=items, selected_store=selected_store, stores=stores)
+    return render_template("index.html", items=items, stores=stores)
 
 
 @app.route("/add", methods=["POST"])
@@ -55,9 +55,11 @@ def add_item():
         quantity = 1
 
     if item_name:
-        default_mapping = ItemDefaultCategory.query.filter_by(item_name=item_name.lower()).first()
+        default_mapping = db.session.scalar(
+            select(ItemDefaultCategory).where(ItemDefaultCategory.item_name == item_name.lower())
+        )
         if default_mapping:
-            category_id = default_mapping.default_category.id
+            category_id = default_mapping.default_category_id
         else:
             category_id = None
 
@@ -68,9 +70,9 @@ def add_item():
     return redirect(url_for("items_partial", store=request.form.get("store")))
 
 
-@app.route("/remove/<string:removed_item>")
+@app.route("/remove/<int:removed_item>")
 def remove_item(removed_item):
-    item = ShoppingListItem.query.filter_by(name=removed_item).first()
+    item = db.session.scalar(select(ShoppingListItem).where(ShoppingListItem.id == removed_item))
     if item:
         db.session.delete(item)
         db.session.commit()
@@ -88,15 +90,14 @@ def items_partial():
 
 @app.route("/category_order")
 def category_order():
-    selected_store_name = request.args.get("store", "Rema 1000")
-    stores = Store.query.all()
-    selected_store = Store.query.filter_by(name=selected_store_name).first()
+    selected_store = int(request.args.get("store", 1))
+    stores = db.session.scalars(select(Store)).all()
+    associations = db.session.scalars(
+        select(StoreCategory).where(StoreCategory.store_id == selected_store).order_by(StoreCategory.order_index)
+    ).all()
 
     return render_template(
-        "category_order.html",
-        stores=stores,
-        selected_store=selected_store,
-        associations=selected_store.store_category_association,
+        "category_order.html", stores=stores, selected_store=selected_store, associations=associations
     )
 
 

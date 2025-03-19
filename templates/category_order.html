@@ -5,10 +5,10 @@
   <h2 class="text-center">Handle</h2>
 
   <!-- Store selection using standard form submission -->
-  <form method="GET" action="{{ url_for('category_order') }}">
+  <form method="GET" action="{{ url_for('category_order') }}" autocomplete="off">
     <select name="store" id="store" class="form-select mb-1" onchange="this.form.submit()">
       {% for store in stores %}
-      <option value="{{ store.name }}" {% if store.name==selected_store.name %}selected{% endif %}>{{ store.name }}
+      <option value="{{ store.id}}" {% if store.id==selected_store %}selected{% endif %}>{{ store.name }}
       </option>
       {% endfor %}
     </select>
@@ -16,7 +16,7 @@
 
   <!-- categories-->
   <ul class="list-group" id="category-list">
-    {% for association in associations|sort(attribute="order_index")%}
+    {% for association in associations %}
     <li class="list-group-item d-flex">
       {{ association.category.name }}
     </li>
@@ -25,9 +25,9 @@
 
 </div>
 
+<!-- Sortable js-->
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script>
-  // Initialize Sortable on the category list element
   var categoryList = document.getElementById('category-list');
   var sortable = Sortable.create(categoryList, {
     animation: 150,

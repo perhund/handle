@@ -9,8 +9,8 @@
     hx-trigger="change from:#store" autocomplete="off">
     <select name="store" id="store" class="form-select mb-1">
       {% for store in stores %}
-      <option value="{{ store.id }}">{{ store.name }}</option>
-      {% endfor %}
+      <option value="{{ store.id}}" {% if store.id==selected_store %}selected{% endif %}>{{ store.name }}
+        {% endfor %}
     </select>
   </form>
 

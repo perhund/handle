@@ -5,7 +5,7 @@
   {% endif %}
   <li class="list-group-item d-flex">
     <div class="col-1 d-flex align-items-center justify-content-center">
-      <button class="btn btn-outline-success rounded" hx-get="{{ url_for('remove_item', removed_item=item.name) }}"
+      <button class="btn btn-outline-success rounded" hx-get="{{ url_for('remove_item', removed_item=item.id) }}"
         hx-target="#items-container" hx-swap="innerHTML" hx-include="#store"
         style="width: 1.5em; height: 1.5em; line-height: 1;">
       </button>
