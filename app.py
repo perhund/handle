@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from models import db, ShoppingListItem, Category, Store, StoreCategory, ItemDefaultCategory
-from sqlalchemy import select, case, func
+from sqlalchemy import select, func
 import os
 
 app = Flask(__name__)
@@ -22,10 +22,9 @@ def get_sorted_shopping_list(selected_store_id):
             & (StoreCategory.store_id == selected_store_id),
         )
         .order_by(
-            case((StoreCategory.order_index.is_(None), 1), else_=0),
-            StoreCategory.order_index,
+            StoreCategory.order_index.nulls_last(),
             StoreCategory.category_id,
-            func.lower(ShoppingListItem.name),
+            ShoppingListItem.name.collate("NOCASE"),
         )
     )
     result = db.session.scalars(stmt).all()
@@ -35,7 +34,6 @@ def get_sorted_shopping_list(selected_store_id):
 @app.route("/")
 def index():
     selected_store = int(request.args.get("store", 1))
-    print(selected_store)
     items = get_sorted_shopping_list(selected_store)
     stores = db.session.scalars(select(Store)).all()
 
