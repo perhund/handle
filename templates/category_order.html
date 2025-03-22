@@ -2,7 +2,6 @@
 
 {% block content %}
 <div class="container" style="max-width: 540px">
-  <h2 class="text-center">Handle</h2>
 
   <!-- Store selection using standard form submission -->
   <form method="GET" action="{{ url_for('category_order') }}" autocomplete="off">
@@ -14,14 +13,21 @@
     </select>
   </form>
 
+  <button hx-put="{{ url_for('category_order')}}" hx-swap="none" hx-include="#category-form, #store"
+    class="btn btn-success w-100">Save</button>
+
+  <h4>Category order</h4>
   <!-- categories-->
-  <ul class="list-group" id="category-list">
-    {% for association in associations %}
-    <li class="list-group-item d-flex">
-      {{ association.category.name }}
-    </li>
-    {% endfor %}
-  </ul>
+  <form id="category-form">
+    <ul class="list-group" id="category-list">
+      {% for association in associations %}
+      <li class="list-group-item d-flex">
+        {{ association.category.name }}
+        <input type="hidden" name="category_id" value="{{association.category.id}}">
+      </li>
+      {% endfor %}
+    </ul>
+  </form>
 
 </div>
 
