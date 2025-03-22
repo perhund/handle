@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from models import db, ShoppingListItem, Category, Store, StoreCategory, ItemDefaultCategory
-from sqlalchemy import select, delete, func
+from sqlalchemy import select, delete
 import os
 
 app = Flask(__name__)
@@ -104,11 +104,9 @@ def category_order_put():
     selected_store = int(request.form.get("store"))
     category_ids = request.form.getlist("category_id")
     db.session.execute(delete(StoreCategory).where(StoreCategory.store_id == selected_store))
-    print(f"Changing store {selected_store}")
     for i, category_id in enumerate(category_ids):
         new_association = StoreCategory(store_id=selected_store, category_id=category_id, order_index=i + 1)
         db.session.add(new_association)
-        print(f"Category {category_id} is now order {i+1}")
     db.session.commit()
     return ""
 
